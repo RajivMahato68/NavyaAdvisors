@@ -48,3 +48,27 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+
+## 🧱 Tech Stack
+
+- ⚛️ React Native (Expo)
+- 🟦 TypeScript
+- 🧭 Expo Router
+- 📊 React Native Chart Kit
+- ⚡ React Query (TanStack)
+- 🧠 Zustand (State Management)
+- 🎨 NativeWind (Tailwind CSS)
+- 🗄️ Mock JSON API
+
+
+```bash
+npm install @tanstack/react-query
+npm install zustand
+npm install react-native-chart-kit
+npm install react-native-svg
+npm install expo-router
+npm install react-native-toast-message
+```
+
+
