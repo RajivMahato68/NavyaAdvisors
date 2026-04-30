@@ -1,32 +1,68 @@
 {
   "stocks": [
     {
-      "symbol": "AAPL",
-      "price": [120, 125, 123, 130, 128],
-      "volume": [300, 450, 280, 500, 420],
-      "change": 2.5,
-      "turnover": 12000
+      "symbol": "NABIL",
+      "companyName": "Nabil Bank Limited",
+      "price": [980, 995, 990, 1010, 1025],
+      "volume": [1200, 1500, 1100, 1600, 1400],
+      "change": 2.8,
+      "turnover": 1450000
     },
     {
-      "symbol": "TSLA",
-      "price": [700, 720, 710, 740, 730],
-      "volume": [500, 600, 550, 650, 620],
-      "change": -1.2,
-      "turnover": 18000
+      "symbol": "NICA",
+      "companyName": "NIC Asia Bank Limited",
+      "price": [850, 860, 845, 880, 910],
+      "volume": [1800, 2000, 1700, 2100, 1900],
+      "change": 3.5,
+      "turnover": 1780000
     },
     {
-      "symbol": "GOOGL",
-      "price": [2200, 2250, 2230, 2300, 2280],
-      "volume": [150, 200, 180, 220, 210],
-      "change": 3.1,
-      "turnover": 15000
+      "symbol": "GBIME",
+      "companyName": "Global IME Bank Limited",
+      "price": [290, 295, 292, 310, 315],
+      "volume": [2500, 2700, 2400, 3000, 2800],
+      "change": 1.9,
+      "turnover": 950000
     },
     {
-      "symbol": "AMZN",
-      "price": [3100, 3150, 3120, 3200, 3180],
-      "volume": [200, 250, 230, 260, 240],
-      "change": -2.3,
-      "turnover": 20000
+      "symbol": "SHIVM",
+      "companyName": "Shivam Cements Limited",
+      "price": [520, 530, 525, 550, 560],
+      "volume": [900, 1000, 850, 1100, 1050],
+      "change": 4.2,
+      "turnover": 1250000
+    },
+    {
+      "symbol": "NLIC",
+      "companyName": "Nepal Life Insurance Company",
+      "price": [1850, 1880, 1870, 1900, 1920],
+      "volume": [600, 650, 620, 700, 680],
+      "change": 2.1,
+      "turnover": 2200000
+    },
+    {
+      "symbol": "EBL",
+      "companyName": "Everest Bank Limited",
+      "price": [720, 730, 725, 750, 760],
+      "volume": [800, 850, 820, 900, 870],
+      "change": 1.4,
+      "turnover": 1100000
+    },
+    {
+      "symbol": "HBL",
+      "companyName": "Himalayan Bank Limited",
+      "price": [420, 415, 410, 405, 405],
+      "volume": [700, 650, 600, 580, 600],
+      "change": -1.8,
+      "turnover": 800000
+    },
+    {
+      "symbol": "HDL",
+      "companyName": "Himalayan Distillery Limited",
+      "price": [3250, 3300, 3280, 3350, 3400],
+      "volume": [300, 320, 310, 350, 340],
+      "change": 2.6,
+      "turnover": 3100000
     }
   ]
 }

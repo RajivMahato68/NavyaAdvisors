@@ -9,7 +9,6 @@ export default function Header({
   title,
   showBack,
   showSearch,
-  showMenu,
   showLogo,
 }: HeaderProps) {
   const router = useRouter();
@@ -29,11 +28,7 @@ export default function Header({
           </TouchableOpacity>
         )}
 
-        {showMenu && (
-          <TouchableOpacity>
-            <Ionicons name="menu-outline" size={28} color={COLORS.primary} />
-          </TouchableOpacity>
-        )}
+        
 
         {showLogo ? (
           <View>

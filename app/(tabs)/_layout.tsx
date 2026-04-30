@@ -11,19 +11,21 @@ export default function TabLayout() {
         headerShown: false,
         tabBarActiveTintColor: COLORS.primary,
         tabBarInactiveTintColor: "#CDCDE0",
-        tabBarShowLabel: false,
+        tabBarShowLabel: true, 
         tabBarStyle: {
           backgroundColor: "#fff",
           borderTopWidth: 1,
           borderTopColor: "#f0f0f0",
           height: 58,
           paddingTop: 8,
+          paddingBottom:5
         },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
+            title: "DashBoard",
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? "home" : "home-outline"}
@@ -34,7 +36,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="live"
+        name="protfolio"
         options={{
           tabBarIcon: ({ color, focused }) => (
             <View className="relative">
@@ -74,7 +76,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="protfolio"
+        name="user"
         options={{
           tabBarIcon: ({ color, focused }) => (
             <Ionicons

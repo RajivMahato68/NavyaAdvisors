@@ -10,7 +10,7 @@ import StockList from "../components/charts/StockList";
 import { useStockData } from "@/hooks/useStockData";
 import { fetchDashboardData } from "@/services/api/stock";
 
-//  your tab button component
+
 import TabButton from "../components/TabButton";
 
 type DashboardData = {
@@ -20,7 +20,7 @@ type DashboardData = {
 };
 
 export default function DashBoard() {
-  const { chartData, loading } = useStockData("AAPL");
+  const { chartData, loading } = useStockData("NABIL");
 
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(
     null,
@@ -88,15 +88,15 @@ export default function DashBoard() {
 
         {/* CONDITIONAL LISTS */}
         {activeTab === "gainers" && (
-          <StockList title="Top Gainers" stocks={dashboardData?.topGainers} />
+          <StockList title="Top Gainers" stocks={dashboardData?.topGainers ?? []} />
         )}
 
         {activeTab === "losers" && (
-          <StockList title="Top Losers" stocks={dashboardData?.topLosers} />
+          <StockList title="Top Losers" stocks={dashboardData?.topLosers ?? []} />
         )}
 
         {activeTab === "turnover" && (
-          <StockList title="Top Turnover" stocks={dashboardData?.topTurnover} />
+          <StockList title="Top Turnover" stocks={dashboardData?.topTurnover ?? []} />
         )}
       </ScrollView>
     </SafeAreaView>
