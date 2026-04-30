@@ -5,3 +5,11 @@ export type HeaderProps = {
     showMenu?: boolean;
     showLogo?: boolean;
 };
+
+export type Stock = {
+  symbol: string;
+  price: number[];
+  volume: number[];
+  change?: number;
+  turnover?: number;
+};

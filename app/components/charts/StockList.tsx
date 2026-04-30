@@ -1,6 +1,17 @@
 import { View, Text } from "react-native";
 
-export default function StockList({ title, stocks }) {
+type StockItem = {
+  symbol: string;
+  change: number;
+  turnover: string;
+};
+
+type StockListProps = {
+  title: string;
+  stocks?: StockItem[];
+};
+
+export default function StockList({ title, stocks }: StockListProps) {
   return (
     <View className="bg-white p-4 rounded-xl shadow mt-4">
       <Text className="text-lg font-bold mb-2">{title}</Text>
