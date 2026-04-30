@@ -1,6 +1,5 @@
 import { useSignIn } from "@clerk/clerk-expo";
 import type { EmailCodeFactor } from "@clerk/types";
-import { Ionicons } from "@expo/vector-icons";
 import { Link, useRouter } from "expo-router";
 import * as React from "react";
 import {
@@ -9,15 +8,19 @@ import {
   View,
   Text,
   ActivityIndicator,
-  TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { COLORS } from "../constant";
+
 import { showToast } from "../utils/toasts";
+import { useTheme } from "@/context/ThemeContext";
+import { getThemeColors } from "../utils/theme";
 
 export default function SignIn() {
   const { signIn, setActive, isLoaded } = useSignIn();
   const router = useRouter();
+
+  const { theme } = useTheme();
+  const colors = getThemeColors(theme);
 
   const [emailAddress, setEmailAddress] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -25,7 +28,7 @@ export default function SignIn() {
   const [showEmailCode, setShowEmailCode] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
-  //  SIGN IN
+  // SIGN IN
   const onSignInPress = async () => {
     if (!isLoaded) return;
 
@@ -50,10 +53,11 @@ export default function SignIn() {
         showToast.success("Login successful");
         router.replace("/");
       } else if (signInAttempt.status === "needs_second_factor") {
-        const emailCodeFactor = signInAttempt.supportedSecondFactors?.find(
-          (factor): factor is EmailCodeFactor =>
-            factor.strategy === "email_code"
-        );
+        const emailCodeFactor =
+          signInAttempt.supportedSecondFactors?.find(
+            (factor): factor is EmailCodeFactor =>
+              factor.strategy === "email_code"
+          );
 
         if (emailCodeFactor) {
           await signIn.prepareSecondFactor({
@@ -62,12 +66,10 @@ export default function SignIn() {
           });
 
           setShowEmailCode(true);
-          showToast.success("Verification code sent to email");
+          showToast.success("Verification code sent");
         }
       }
     } catch (err: any) {
-      console.log("LOGIN ERROR:", err);
-
       const message =
         err?.errors?.[0]?.longMessage ||
         err?.errors?.[0]?.message ||
@@ -79,7 +81,7 @@ export default function SignIn() {
     }
   };
 
-  //  VERIFY OTP
+  // VERIFY
   const onVerifyPress = async () => {
     if (!isLoaded) return;
 
@@ -105,8 +107,6 @@ export default function SignIn() {
         router.replace("/");
       }
     } catch (err: any) {
-      console.log("OTP ERROR:", err);
-
       const message =
         err?.errors?.[0]?.longMessage ||
         err?.errors?.[0]?.message ||
@@ -120,31 +120,29 @@ export default function SignIn() {
 
   return (
     <SafeAreaView
-      className="flex-1 bg-white justify-center"
-      style={{ padding: 28 }}
+      className={`flex-1 justify-center px-7 ${colors.background}`}
     >
       {!showEmailCode ? (
         <>
-
           {/* HEADER */}
           <View className="items-center mb-8">
-            <Text className="text-3xl font-bold text-primary mb-2">
+            <Text className={`text-3xl font-bold ${colors.text}`}>
               Welcome Back
             </Text>
-            <Text className="text-secondary">
+            <Text className={colors.secondaryText}>
               Sign in to continue
             </Text>
           </View>
 
           {/* EMAIL */}
           <View className="mb-4">
-            <Text className="text-primary font-medium mb-2">
+            <Text className={`${colors.text} font-medium mb-2`}>
               Email
             </Text>
             <TextInput
-              className="w-full bg-surface p-4 rounded-xl text-primary"
+              className={`border p-2 rounded mt-1 ${colors.inputBorder} ${colors.inputBg} ${colors.text}`}
               placeholder="user@example.com"
-              placeholderTextColor="#999"
+              placeholderTextColor={theme === "dark" ? "#aaa" : "#999"}
               autoCapitalize="none"
               keyboardType="email-address"
               value={emailAddress}
@@ -154,13 +152,13 @@ export default function SignIn() {
 
           {/* PASSWORD */}
           <View className="mb-6">
-            <Text className="text-primary font-medium mb-2">
+            <Text className={`${colors.text} font-medium mb-2`}>
               Password
             </Text>
             <TextInput
-              className="w-full bg-surface p-4 rounded-xl text-primary"
+              className={`border p-2 rounded mt-1 ${colors.inputBorder} ${colors.inputBg} ${colors.text}`}
               placeholder="********"
-              placeholderTextColor="#999"
+              placeholderTextColor={theme === "dark" ? "#aaa" : "#999"}
               secureTextEntry
               value={password}
               onChangeText={setPassword}
@@ -171,7 +169,7 @@ export default function SignIn() {
           <Pressable
             className={`w-full py-4 rounded-full items-center mb-10 ${
               loading || !emailAddress || !password
-                ? "bg-gray-300"
+                ? "bg-gray-400"
                 : "bg-primary"
             }`}
             onPress={onSignInPress}
@@ -188,11 +186,11 @@ export default function SignIn() {
 
           {/* FOOTER */}
           <View className="flex-row justify-center">
-            <Text className="text-secondary">
+            <Text className={colors.secondaryText}>
               Don&apos;t have an account?{" "}
             </Text>
             <Link href="/sign-up">
-              <Text className="text-primary font-bold">
+              <Text className={`${colors.text} font-bold`}>
                 Sign up
               </Text>
             </Link>
@@ -200,21 +198,21 @@ export default function SignIn() {
         </>
       ) : (
         <>
-          {/* VERIFY UI */}
+          {/* VERIFY */}
           <View className="items-center mb-8">
-            <Text className="text-3xl font-bold text-primary mb-2">
+            <Text className={`text-3xl font-bold ${colors.text}`}>
               Verify Email
             </Text>
-            <Text className="text-secondary text-center">
+            <Text className={`${colors.secondaryText} text-center`}>
               Enter the code sent to your email
             </Text>
           </View>
 
           <View className="mb-6">
             <TextInput
-              className="w-full bg-surface p-4 rounded-xl text-primary text-center tracking-widest"
+              className={`w-full p-4 rounded-xl text-center tracking-widest ${colors.card} ${colors.text}`}
               placeholder="123456"
-              placeholderTextColor="#999"
+              placeholderTextColor={theme === "dark" ? "#aaa" : "#999"}
               keyboardType="number-pad"
               value={code}
               onChangeText={setCode}

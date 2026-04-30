@@ -12,25 +12,29 @@ import Header from "../components/Header";
 import { useWatchlistQuery } from "@/hooks/useWatchlist";
 import { useWatchlistStore } from "../store/useWatchlistStore";
 
+import { useTheme } from "@/context/ThemeContext";
+import { getThemeColors } from "@/app/utils/theme";
+
 type Stock = {
   symbol: string;
   change: number;
 };
 
 export default function WatchList() {
-  const { data: stocks, isLoading } = useWatchlistQuery();
+  const { theme } = useTheme();
+  const colors = getThemeColors(theme);
 
+  const { data: stocks, isLoading } = useWatchlistQuery();
   const { search, setSearch, refreshWatchlist } =
     useWatchlistStore();
 
-  // SAFE FILTER
   const filteredStocks: Stock[] =
     stocks?.filter((item: Stock) =>
       item.symbol.toLowerCase().includes(search.toLowerCase())
     ) || [];
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100 px-4">
+    <SafeAreaView className={`flex-1 ${colors.background} px-4`}>
 
       {/* HEADER */}
       <Header title="WatchList" showBack />
@@ -40,13 +44,17 @@ export default function WatchList() {
         value={search}
         onChangeText={setSearch}
         placeholder="Search stock..."
-        className="bg-white px-4 py-3 rounded-xl mt-4"
+        placeholderTextColor={theme === "dark" ? "#a1a1aa" : "#9ca3af"}
+        className={`px-4 py-3 rounded-xl mt-4 ${colors.card} ${colors.text}`}
       />
 
       {/* REFRESH BUTTON */}
       <TouchableOpacity
         onPress={refreshWatchlist}
-        className="bg-blue-500 py-3 rounded-xl mt-3"
+        style={{
+          backgroundColor: "#3b82f6",
+        }}
+        className="py-3 rounded-xl mt-3"
       >
         <Text className="text-white text-center font-semibold">
           Refresh Watchlist
@@ -57,7 +65,7 @@ export default function WatchList() {
       <View className="flex-1 mt-4">
 
         {isLoading ? (
-          <Text className="text-center mt-10">
+          <Text className={`text-center mt-10 ${colors.text}`}>
             Loading...
           </Text>
         ) : (
@@ -69,20 +77,24 @@ export default function WatchList() {
               paddingBottom: 100,
             }}
             renderItem={({ item }) => (
-              <View className="flex-row justify-between bg-white p-4 rounded-xl mb-3">
+              <View
+                className={`flex-row justify-between p-4 rounded-xl mb-3 ${colors.card}`}
+              >
 
                 {/* SYMBOL */}
-                <Text className="text-lg font-bold">
+                <Text className={`text-lg font-bold ${colors.text}`}>
                   {item.symbol}
                 </Text>
 
                 {/* CHANGE */}
                 <Text
-                  className={`font-semibold ${
-                    item.change < 0
-                      ? "text-red-500"
-                      : "text-green-500"
-                  }`}
+                  style={{
+                    color:
+                      item.change < 0
+                        ? "#ef4444" // red-500
+                        : "#22c55e", // green-500
+                  }}
+                  className="font-semibold"
                 >
                   {item.change}%
                 </Text>

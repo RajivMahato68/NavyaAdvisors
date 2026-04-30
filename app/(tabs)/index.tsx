@@ -1,33 +1,34 @@
 import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ScrollView, View } from "react-native";
+import { ScrollView, View, Text } from "react-native";
 
 import Header from "../components/Header";
 import LineChartComponent from "../components/charts/LineChartComponent";
 import BarChartComponent from "../components/charts/BarChartComponent";
 import StockList from "../components/charts/StockList";
+import TabButton from "../components/TabButton";
 
 import { useStockData } from "@/hooks/useStockData";
 import { fetchDashboardData } from "@/services/api/stock";
-
-
-import TabButton from "../components/TabButton";
+import { useTheme } from "@/context/ThemeContext";
+import { getThemeColors } from "../utils/theme";
 
 type DashboardData = {
-  topGainers: Array<any>;
-  topLosers: Array<any>;
-  topTurnover: Array<any>;
+  topGainers: any[];
+  topLosers: any[];
+  topTurnover: any[];
 };
 
 export default function DashBoard() {
+  const { theme } = useTheme();
+   const colors = getThemeColors(theme);
+
   const { chartData, loading } = useStockData("NABIL");
 
-  const [dashboardData, setDashboardData] = useState<DashboardData | null>(
-    null,
-  );
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
 
   const [activeTab, setActiveTab] = useState<"gainers" | "losers" | "turnover">(
-    "gainers",
+    "gainers"
   );
 
   useEffect(() => {
@@ -40,45 +41,50 @@ export default function DashBoard() {
   }, []);
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100">
+    <SafeAreaView className={`flex-1 ${colors.background}`}>
+      {/* HEADER  */}
       <Header title="Navya Advisors" />
 
-      <ScrollView className="p-4">
-        {/* CHARTS */}
-        <LineChartComponent
-          data={
-            chartData?.priceData ?? {
-              labels: [],
-              datasets: [{ data: [] }],
-            }
-          }
-          loading={loading}
-        />
+      <ScrollView className="">
 
-        <BarChartComponent
-          data={
-            chartData?.volumeData ?? {
-              labels: [],
-              datasets: [{ data: [] }],
+        {/* LINE CHART */}
+        <View className={`${colors.card} rounded-xl  mb-4`}>
+          <LineChartComponent
+            data={
+              chartData?.priceData ?? {
+                labels: [],
+                datasets: [{ data: [] }],
+              }
             }
-          }
-          loading={loading}
-        />
+            loading={loading}
+          />
+        </View>
 
-        {/*  TAB SECTION */}
-        <View className="flex-row bg-white rounded-xl mt-4 overflow-hidden">
+        {/* BAR CHART */}
+        <View className={`${colors.card} rounded-xl  mb-4`}>
+          <BarChartComponent
+            data={
+              chartData?.volumeData ?? {
+                labels: [],
+                datasets: [{ data: [] }],
+              }
+            }
+            loading={loading}
+          />
+        </View>
+
+        {/* TAB SECTION */}
+        <View className={`flex-row rounded-xl overflow-hidden ${colors.card}`}>
           <TabButton
             title="Top Gainers"
             active={activeTab === "gainers"}
             onPress={() => setActiveTab("gainers")}
           />
-
           <TabButton
             title="Top Losers"
             active={activeTab === "losers"}
             onPress={() => setActiveTab("losers")}
           />
-
           <TabButton
             title="Turnover"
             active={activeTab === "turnover"}
@@ -86,18 +92,31 @@ export default function DashBoard() {
           />
         </View>
 
-        {/* CONDITIONAL LISTS */}
-        {activeTab === "gainers" && (
-          <StockList title="Top Gainers" stocks={dashboardData?.topGainers ?? []} />
-        )}
+        {/* LISTS */}
+        <View className="mt-4">
 
-        {activeTab === "losers" && (
-          <StockList title="Top Losers" stocks={dashboardData?.topLosers ?? []} />
-        )}
+          {activeTab === "gainers" && (
+            <StockList
+              title="Top Gainers"
+              stocks={dashboardData?.topGainers ?? []}
+            />
+          )}
 
-        {activeTab === "turnover" && (
-          <StockList title="Top Turnover" stocks={dashboardData?.topTurnover ?? []} />
-        )}
+          {activeTab === "losers" && (
+            <StockList
+              title="Top Losers"
+              stocks={dashboardData?.topLosers ?? []}
+            />
+          )}
+
+          {activeTab === "turnover" && (
+            <StockList
+              title="Top Turnover"
+              stocks={dashboardData?.topTurnover ?? []}
+            />
+          )}
+
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

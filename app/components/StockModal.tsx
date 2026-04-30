@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { z } from "zod";
+import { useTheme } from "@/context/ThemeContext";
+import { getThemeColors } from "@/app/utils/theme";
 
 type Stock = {
   id?: string;
@@ -17,7 +19,6 @@ type Stock = {
   currentPrice: number;
 };
 
-// Zod validation schema 
 const stockSchema = z.object({
   symbol: z.string().min(1, "Symbol is required"),
   companyName: z.string().min(1, "Company name is required"),
@@ -39,6 +40,9 @@ export default function StockModal({
   onSave,
   initialData,
 }: Props) {
+  const { theme } = useTheme();
+  const colors = getThemeColors(theme);
+
   const [form, setForm] = useState<Stock>({
     symbol: "",
     companyName: "",
@@ -49,7 +53,6 @@ export default function StockModal({
 
   const [errors, setErrors] = useState<any>({});
 
-  
   useEffect(() => {
     if (initialData) {
       setForm(initialData);
@@ -75,7 +78,6 @@ export default function StockModal({
     }));
   };
 
-  
   const handleSave = () => {
     const result = stockSchema.safeParse(form);
 
@@ -98,20 +100,21 @@ export default function StockModal({
     <Modal visible={visible} transparent animationType="slide">
       <View className="flex-1 justify-end bg-black/40">
 
-        <View className="bg-white p-5 rounded-t-2xl">
+        <View className={`p-5 rounded-t-2xl ${colors.card}`}>
 
           {/* TITLE */}
-          <Text className="text-lg font-bold mb-3">
+          <Text className={`text-lg font-bold mb-3 ${colors.text}`}>
             {initialData ? "Edit Stock" : "Add Stock"}
           </Text>
 
-          {/* Symbol  */}
-          <Text className="text-gray-600 mb-1">Symbol</Text>
+          {/* Symbol */}
+          <Text className={colors.secondaryText}>Symbol</Text>
           <TextInput
             placeholder="e.g. AAPL"
+            placeholderTextColor={theme === "dark" ? "#aaa" : "#999"}
             value={form.symbol}
             onChangeText={(v) => handleChange("symbol", v)}
-            className="border p-2 rounded"
+            className={`border p-2 rounded mt-1 ${colors.inputBorder} ${colors.inputBg} ${colors.text}`}
           />
           {errors.symbol && (
             <Text className="text-red-500 text-xs mb-2">
@@ -119,17 +122,16 @@ export default function StockModal({
             </Text>
           )}
 
-         {/* Company  */}
-          <Text className="text-gray-600 mb-1 mt-2">
+          {/* Company */}
+          <Text className={`mt-2 ${colors.secondaryText}`}>
             Company Name
           </Text>
           <TextInput
             placeholder="Apple Inc."
+            placeholderTextColor={theme === "dark" ? "#aaa" : "#999"}
             value={form.companyName}
-            onChangeText={(v) =>
-              handleChange("companyName", v)
-            }
-            className="border p-2 rounded"
+            onChangeText={(v) => handleChange("companyName", v)}
+            className={`border p-2 rounded mt-1 ${colors.inputBorder} ${colors.inputBg} ${colors.text}`}
           />
           {errors.companyName && (
             <Text className="text-red-500 text-xs mb-2">
@@ -137,18 +139,17 @@ export default function StockModal({
             </Text>
           )}
 
-          {/* Quantity  */}
-          <Text className="text-gray-600 mb-1 mt-2">
+          {/* Quantity */}
+          <Text className={`mt-2 ${colors.secondaryText}`}>
             Quantity
           </Text>
           <TextInput
-            placeholder="10"
             keyboardType="numeric"
+            placeholder="10"
+            placeholderTextColor={theme === "dark" ? "#aaa" : "#999"}
             value={String(form.quantity)}
-            onChangeText={(v) =>
-              handleChange("quantity", v)
-            }
-            className="border p-2 rounded"
+            onChangeText={(v) => handleChange("quantity", v)}
+            className={`border p-2 rounded mt-1 ${colors.inputBorder} ${colors.inputBg} ${colors.text}`}
           />
           {errors.quantity && (
             <Text className="text-red-500 text-xs mb-2">
@@ -156,18 +157,17 @@ export default function StockModal({
             </Text>
           )}
 
-          {/* Purchase Price  */}
-          <Text className="text-gray-600 mb-1 mt-2">
+          {/* Purchase Price */}
+          <Text className={`mt-2 ${colors.secondaryText}`}>
             Purchase Price
           </Text>
           <TextInput
-            placeholder="150"
             keyboardType="numeric"
+            placeholder="150"
+            placeholderTextColor={theme === "dark" ? "#aaa" : "#999"}
             value={String(form.purchasePrice)}
-            onChangeText={(v) =>
-              handleChange("purchasePrice", v)
-            }
-            className="border p-2 rounded"
+            onChangeText={(v) => handleChange("purchasePrice", v)}
+            className={`border p-2 rounded mt-1 ${colors.inputBorder} ${colors.inputBg} ${colors.text}`}
           />
           {errors.purchasePrice && (
             <Text className="text-red-500 text-xs mb-2">
@@ -175,30 +175,30 @@ export default function StockModal({
             </Text>
           )}
 
-          {/* Current Price  */}
-          <Text className="text-gray-600 mb-1 mt-2">
+          {/* Current Price */}
+          <Text className={`mt-2 ${colors.secondaryText}`}>
             Current Price
           </Text>
           <TextInput
-            placeholder="175"
             keyboardType="numeric"
+            placeholder="175"
+            placeholderTextColor={theme === "dark" ? "#aaa" : "#999"}
             value={String(form.currentPrice)}
-            onChangeText={(v) =>
-              handleChange("currentPrice", v)
-            }
-            className="border p-2 rounded"
+            onChangeText={(v) => handleChange("currentPrice", v)}
+            className={`border p-2 rounded mt-1 ${colors.inputBorder} ${colors.inputBg} ${colors.text}`}
           />
           {errors.currentPrice && (
             <Text className="text-red-500 text-xs mb-2">
               {errors.currentPrice}
             </Text>
           )}
-            {/* Button  */}
+
+          {/* BUTTONS */}
           <View className="flex-row gap-2 mt-4">
 
             <TouchableOpacity
               onPress={onClose}
-              className="flex-1 bg-gray-400 p-3 rounded"
+              className="flex-1 bg-gray-500 p-3 rounded"
             >
               <Text className="text-white text-center">
                 Cancel

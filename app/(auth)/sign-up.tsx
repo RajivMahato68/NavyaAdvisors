@@ -13,12 +13,17 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter, Link } from "expo-router";
 import { useSignUp } from "@clerk/clerk-expo";
-import { COLORS } from "../constant";
 import { showToast } from "../utils/toasts";
+
+import { useTheme } from "@/context/ThemeContext";
+import { getThemeColors } from "@/app/utils/theme";
 
 export default function SignUp() {
   const { isLoaded, signUp, setActive } = useSignUp();
   const router = useRouter();
+
+  const { theme } = useTheme();
+  const colors = getThemeColors(theme);
 
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
@@ -27,10 +32,9 @@ export default function SignUp() {
   const [code, setCode] = useState("");
   const [pendingVerification, setPendingVerification] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  // 👁️ password toggle
   const [showPassword, setShowPassword] = useState(false);
 
+  // SIGNUP
   const onSignUpPress = async () => {
     if (!isLoaded) return;
 
@@ -56,12 +60,7 @@ export default function SignUp() {
       showToast.success("Verification code sent");
       setPendingVerification(true);
     } catch (err: any) {
-      const msg =
-        err?.errors?.[0]?.longMessage ||
-        err?.errors?.[0]?.message ||
-        "Sign Up Failed";
-
-      showToast.error(msg);
+      showToast.error(err?.errors?.[0]?.message || "Sign Up Failed");
     } finally {
       setLoading(false);
     }
@@ -69,11 +68,6 @@ export default function SignUp() {
 
   const onVerifyPress = async () => {
     if (!isLoaded) return;
-
-    if (!code) {
-      showToast.error("Enter Verification code");
-      return;
-    }
 
     setLoading(true);
 
@@ -84,109 +78,86 @@ export default function SignUp() {
 
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
-
-        showToast.success("Account Created");
         router.replace("/");
       }
     } catch (err: any) {
-      const msg =
-        err?.errors?.[0]?.longMessage ||
-        err?.errors?.[0]?.message ||
-        "Verification failed";
-
-      showToast.error(msg);
+      showToast.error(err?.errors?.[0]?.message || "Verification failed");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className={`flex-1 ${colors.background}`}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}
         className="flex-1"
       >
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1, padding: 24 }}
-          keyboardShouldPersistTaps="handled"
-        >
+        <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 24 }}>
           {!pendingVerification ? (
             <>
-              {/* BACK */}
-              <TouchableOpacity
-                onPress={() => router.push("/")}
-                className="absolute top-10 left-6 z-10"
-              >
-                <Ionicons
-                  name="arrow-back"
-                  size={24}
-                  color={COLORS.primary}
-                />
-              </TouchableOpacity>
 
               {/* HEADER */}
               <View className="mb-10 mt-10">
-                <Text className="text-3xl font-bold text-gray-900">
+                <Text className={`text-3xl font-bold ${colors.text}`}>
                   Create Account
                 </Text>
-                <Text className="text-gray-500 mt-2">
+                <Text className={colors.secondaryText}>
                   Sign up to get started
                 </Text>
               </View>
 
               {/* INPUTS */}
               <View className="space-y-4">
-                <View>
-                  <Text className="mb-2">First Name</Text>
-                  <TextInput
-                    className="bg-gray-100 p-4 rounded-xl"
-                    value={firstName}
-                    onChangeText={setFirstName}
-                  />
-                </View>
+                {["First Name", "Last Name", "Email"].map((label, index) => {
+                  const values = [
+                    firstName,
+                    lastName,
+                    emailAddress,
+                  ];
+                  const setters = [
+                    setFirstName,
+                    setLastName,
+                    setEmailAddress,
+                  ];
 
-                <View>
-                  <Text className="mb-2">Last Name</Text>
-                  <TextInput
-                    className="bg-gray-100 p-4 rounded-xl"
-                    value={lastName}
-                    onChangeText={setLastName}
-                  />
-                </View>
+                  return (
+                    <View key={label}>
+                      <Text className={`${colors.text} mb-2`}>
+                        {label}
+                      </Text>
+                      <TextInput
+                       className={`border p-2 rounded mt-1 ${colors.inputBorder} ${colors.inputBg} ${colors.text}`}
+                        value={values[index]}
+                        onChangeText={setters[index]}
+                      />
+                    </View>
+                  );
+                })}
 
+                {/* PASSWORD */}
                 <View>
-                  <Text className="mb-2">Email</Text>
-                  <TextInput
-                    className="bg-gray-100 p-4 rounded-xl"
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                    value={emailAddress}
-                    onChangeText={setEmailAddress}
-                  />
-                </View>
+                  <Text className={`${colors.text} mb-2`}>
+                    Password
+                  </Text>
 
-                {/* PASSWORD WITH ICON */}
-                <View>
-                  <Text className="mb-2">Password</Text>
-
-                  <View className="flex-row items-center bg-gray-100 rounded-xl px-3">
+                  <View
+                    className={`flex-row items-center border  rounded-xl px-3 ${colors.inputBorder} ${colors.inputBg} ${colors.text}`}
+                  >
                     <TextInput
-                      className="flex-1 py-4"
+                      className={`flex-1 py-4 ${colors.text}`}
                       secureTextEntry={!showPassword}
                       value={password}
                       onChangeText={setPassword}
-                      placeholder="********"
                     />
 
                     <TouchableOpacity
                       onPress={() => setShowPassword(!showPassword)}
                     >
                       <Ionicons
-                        name={
-                          showPassword ? "eye-off" : "eye"
-                        }
+                        name={showPassword ? "eye-off" : "eye"}
                         size={22}
-                        color="#666"
+                        color={theme === "dark" ? "#fff" : "#000"}
                       />
                     </TouchableOpacity>
                   </View>
@@ -197,7 +168,7 @@ export default function SignUp() {
               <TouchableOpacity
                 onPress={onSignUpPress}
                 disabled={loading}
-                className="bg-primary py-4 rounded-xl mt-8 items-center"
+                className="bg-blue-500 py-4 rounded-xl mt-8 items-center"
               >
                 {loading ? (
                   <ActivityIndicator color="#fff" />
@@ -210,9 +181,11 @@ export default function SignUp() {
 
               {/* FOOTER */}
               <View className="flex-row justify-center mt-6">
-                <Text>Already have an account? </Text>
+                <Text className={colors.secondaryText}>
+                  Already have an account?
+                </Text>
                 <Link href="/sign-in">
-                  <Text className="text-primary font-semibold">
+                  <Text className={`${colors.text} font-semibold`}>
                     Login
                   </Text>
                 </Link>
@@ -222,16 +195,16 @@ export default function SignUp() {
             <>
               {/* VERIFY */}
               <View className="mt-20 mb-10">
-                <Text className="text-3xl font-bold">
+                <Text className={`text-3xl font-bold ${colors.text}`}>
                   Verify Email
                 </Text>
-                <Text className="text-gray-500 mt-2">
+                <Text className={colors.secondaryText}>
                   Enter code sent to email
                 </Text>
               </View>
 
               <TextInput
-                className="bg-gray-100 p-4 rounded-xl text-center text-lg"
+                className={`${colors.card} p-4 rounded-xl text-center ${colors.text}`}
                 keyboardType="number-pad"
                 value={code}
                 onChangeText={setCode}
@@ -239,8 +212,7 @@ export default function SignUp() {
 
               <TouchableOpacity
                 onPress={onVerifyPress}
-                disabled={loading}
-                className="bg-primary py-4 rounded-xl mt-6 items-center"
+                className="bg-blue-500 py-4 rounded-xl mt-6 items-center"
               >
                 {loading ? (
                   <ActivityIndicator color="#fff" />
