@@ -95,3 +95,7 @@ npm i react-native-toast-message
 
 ![Dashboard](./assets/screenshort/dashboard.jpeg)
 ![Profile](./assets/screenshort/profile.jpeg)
+![Protfolio](./assets/screenshort/protfolio.jpeg)
+![SignIn](./assets/screenshort/signin.jpeg)
+![Signup](./assets/screenshort/signup.jpeg)
+![WatchList](./assets/screenshort/watchlist.jpeg)
