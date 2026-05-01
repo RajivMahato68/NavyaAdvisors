@@ -86,4 +86,13 @@ npm install @clerk/clerk-expo expo-auth-session expo-web-browser expo-secure-sto
 
 ```
 
+react-native-toast-message install
 
+```base
+npm i react-native-toast-message
+```
+
+
+
+## Screenshots
+![Dashboard](.\assets\screenshort\dashboard.jpeg)

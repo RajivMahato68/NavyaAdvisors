@@ -127,7 +127,7 @@ export default function SignIn() {
           {/* HEADER */}
           <View className="items-center mb-8">
             <Text className={`text-3xl font-bold ${colors.text}`}>
-              Welcome Back
+              Welcome
             </Text>
             <Text className={colors.secondaryText}>
               Sign in to continue
